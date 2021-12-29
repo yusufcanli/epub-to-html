@@ -34,11 +34,11 @@ filename = process.argv[2];
             db += x.text
         })
         imgs.map(img => {
-            console.log(img)
             db = db.split(`${img.name}`).join(`data:image/png;base64, ${img.source}`)
         })
         const file = filename.split('.').slice(0, -1).join('.')
         fs.writeFileSync(`${file}.html`, (db))
+		console.log("File created successfully");
         zip.close()
     });
   
