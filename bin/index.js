@@ -4,12 +4,15 @@ const StreamZip = require('node-stream-zip');
 const fs = require('fs');
 var path = require('path');
 
-if (process.argv.length < 3) {
-        console.log('Usage: node ' + process.argv[1] + ' FILENAME');
-        process.exit(1);
+const checkFile = (filename) => {
+    let ext = path.extname(filename)
+    if (ext == '.epub' || ext == '.mobi') {
+        return true
     }
-filename = process.argv[2];
-    const zip = new StreamZip({
+}
+
+const convertFile = (filename) => {
+    let zip = new StreamZip({
         file: filename,
         storeEntries: true
     });
@@ -35,10 +38,36 @@ filename = process.argv[2];
         })
         imgs.map(img => {
             db = db.split(`${img.name}`).join(`data:image/png;base64, ${img.source}`)
+            img.name = img.name.split('/')
+            img.name[0] = '..'
+            img.name = img.name.join('/')
+            db = db.split(`${img.name}`).join(`data:image/png;base64, ${img.source}`)
         })
         const file = filename.split('.').slice(0, -1).join('.')
         fs.writeFileSync(`${file}.html`, (db))
-		console.log("File created successfully");
-        zip.close()
+        zip.close(() => console.log(filename + ' converted successfully.'))
     });
-  
+}
+
+if (process.argv.length < 3) {
+        console.log('Usage: node ' + process.argv[1] + ' FILENAME');
+        process.exit(1);
+    }
+
+filename = process.argv[2];
+
+if(filename === '*') {
+    fs.readdir(process.cwd(), (err, files) => {
+        files.forEach(filename => {
+            if (checkFile(filename)) {
+                convertFile(filename)
+            }
+        })
+    })
+} else {
+    if (checkFile(filename)) {
+        convertFile(filename)
+    } else {
+        console.log('This file is not an epub or mobi.')
+    }
+}
