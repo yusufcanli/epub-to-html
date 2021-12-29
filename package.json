@@ -1,0 +1,11 @@
+{
+    "name": "epub-to-html",
+    "version": "1.0.0",
+    "main": "./bin/index.js",
+    "bin": {
+        "epub-to-html": "./bin/index.js"
+    },
+    "dependencies": {
+		"node-stream-zip": "^1.15.0"
+    }
+}
