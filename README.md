@@ -9,3 +9,8 @@ It's almost 2022. And there is still no one good e-book reader for Windows. Yep.
     npm install
     npm -g epub-to-html
     epub-to-html file.epub
+
+ 
+ Or you can add all epub or mobi files:
+
+     epub-to-html *
