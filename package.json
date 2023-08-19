@@ -2,10 +2,22 @@
     "name": "epub-to-html",
     "version": "1.0.0",
     "main": "./bin/index.js",
+    "scripts": {
+        "build": "tsc",
+        "start": "ts-node bin/src/index.ts",
+        "convert": "node dist/index.js"
+      },
     "bin": {
-        "epub-to-html": "./bin/index.js"
+        "epub-to-html": "./dist/index.js"
     },
     "dependencies": {
-		"node-stream-zip": "^1.15.0"
+        "node-html-parser": "^6.1.5",
+        "node-stream-zip": "^1.15.0",
+        "yargs": "^17.7.2"
+    },
+    "devDependencies": {
+        "@types/node": "^20.5.1",
+        "@types/yargs": "^17.0.24",
+        "typescript": "^5.1.6"
     }
 }
