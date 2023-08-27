@@ -19,7 +19,7 @@ function convertFile(zip, entryData) {
         const chps = [];
         const imgs = [];
         for (const entry of entryData) {
-            if (entry.name === 'content.opf') {
+            if (path_1.default.basename(entry.name) === 'content.opf') {
                 const ncx = (0, node_html_parser_1.parse)(zip.entryDataSync(entry.name).toString('utf8'));
                 const manifest = ncx.querySelector('manifest');
                 if (manifest) {
@@ -29,8 +29,15 @@ function convertFile(zip, entryData) {
                             const itemName = item.getAttribute('href') || 'chapter';
                             const ext = itemName ? path_1.default.extname(itemName) : '';
                             if (ext === '.html' || ext === '.xhtml' || ext === '.htm') {
-                                const text = zip.entryDataSync(itemName).toString('utf8');
-                                chps.push({ name: itemName, text });
+                                for (const entryName of Object.keys(zip.entries())) {
+                                    if (path_1.default.basename(entryName) === path_1.default.basename(itemName)) {
+                                        const entry = zip.entry(entryName);
+                                        if (entry) {
+                                            const text = zip.entryDataSync(entryName).toString('utf8');
+                                            chps.push({ name: itemName, text });
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

@@ -27,13 +27,13 @@ function main() {
             const argv = yargs_1.default
                 .usage('Usage: $0 [options] FILENAME')
                 .option('all', {
+                alias: 'a',
                 describe: 'Convert all supported files in the current directory',
             })
-                .demandCommand(1, 'You must provide a FILENAME')
                 .help()
                 .parseSync();
             const filename = argv._[0];
-            if (argv['convert-all']) {
+            if (argv['all']) {
                 const files = yield fs.readdir(process.cwd());
                 for (const file of files) {
                     if (checkFile(file)) {

@@ -17,7 +17,7 @@ async function convertFile(zip: StreamZip, entryData: any): Promise<string> {
     const imgs: Image[] = [];
 
     for (const entry of entryData) {
-        if (entry.name === 'content.opf') {
+        if (path.basename(entry.name) === 'content.opf') {
             const ncx = parse(zip.entryDataSync(entry.name).toString('utf8'));
             const manifest = ncx.querySelector('manifest');
             if(manifest) {
@@ -28,8 +28,15 @@ async function convertFile(zip: StreamZip, entryData: any): Promise<string> {
                         const ext = itemName ? path.extname(itemName) : '';
         
                         if (ext === '.html' || ext === '.xhtml' || ext === '.htm') {
-                            const text = zip.entryDataSync(itemName).toString('utf8');
-                            chps.push({ name: itemName, text });
+                            for (const entryName of Object.keys(zip.entries())) {
+                                if (path.basename(entryName) === path.basename(itemName)) {
+                                    const entry = zip.entry(entryName);
+                                    if (entry) {
+                                        const text = zip.entryDataSync(entryName).toString('utf8');
+                                        chps.push({ name: itemName, text });
+                                    }
+                                }
+                            }
                         }
                     }
                 }
